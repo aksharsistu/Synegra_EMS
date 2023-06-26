@@ -16,7 +16,7 @@ export default function Stage() {
             currentStages.push(<tr>
                 <td>{stage_list.data[i].ip}</td>
                 <td>{stage_list.data[i].stage}</td>
-                <td><button type="submit" value={i} onClick={handleDelete}>Delete</button></td>
+                <td><button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button></td>
             </tr>)
         }
         setCurrentStages(currentStages)
@@ -28,16 +28,16 @@ export default function Stage() {
         const data ={
             ip:stage_list.data[e.target.value].ip
         }
-        axios.post(BASE_URL + '/stage/delete/', data).then(async r => await refresh()).catch(err => console.log(err))
+        axios.post(BASE_URL + '/stage/delete/', data).then(async () => await refresh()).catch(err => console.log(err))
     }
 
     async function handleSubmit(e) {
         e.preventDefault()
         const data = {
             ip: ip,
-            stage_id: stageId
+            stage_id: stageId.toUpperCase()
         }
-        axios.post(BASE_URL + '/stage/set/', data).then(async r => await refresh()).catch(err => console.log(err))
+        axios.post(BASE_URL + '/stage/set/', data).then(async () => await refresh()).catch(err => console.log(err))
         setIp('')
         setStageId('')
     }

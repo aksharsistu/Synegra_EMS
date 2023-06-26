@@ -23,7 +23,7 @@ function App() {
   html = superuser ? html : <></>
   let homepage
     if(username.length > 0){
-        homepage = <Route path="/home" element={<Home username={username}/>}/>
+        homepage = <Route path="/home" element={<Home username={username} superuser={superuser}/>}/>
     }
   function handleAccess(user, access) {
     setUsername(user)

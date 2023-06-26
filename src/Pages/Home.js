@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const BASE_URL = 'http://localhost:8000'
 
-export default function Home({username}) {
+export default function Home({username, superuser}) {
     const [barcode, setBarcode] = useState('')
     const [description, setDescription] = useState('')
     const [index, setIndex] = useState(0)
@@ -13,6 +13,7 @@ export default function Home({username}) {
     const [processIds, setProcessIds] = useState([''])
     const [processNames, setProcessNames] = useState([''])
     const [message, setMessage] = useState('')
+    const [override, setOverride] = useState(false)
 
     async function getStage() {
         const stg = await axios.get(BASE_URL + '/stage/get/')
@@ -20,33 +21,30 @@ export default function Home({username}) {
     }
 
     async function getDetails() {
-        const num = await axios.get(BASE_URL + '/list/product/get/number/')
-        setOptions((await getOptions(num)))
-        setProcessIds((await getProcessIds(num)))
-        setProcessNames((await getProcessNames(num)))
+        const arr = await axios.get(BASE_URL + '/list/product/get/')
+        setOptions(getOptions(arr.data))
+        setProcessIds(getProcessIds(arr.data))
+        setProcessNames(getProcessNames(arr.data))
     }
-    async function getOptions(num) {
+    function getOptions(list) {
         let options = []
-        for (let i = 0; i < parseInt(num.data); i++) {
-            const res = await axios.get(BASE_URL + '/list/product/get/' + i.toString() + '/')
-            options.push(<option value={i} key={i}>{res.data.name.toString()}</option>)
+        for (let i = 0; i < list.length; i++) {
+            options.push(<option value={i} key={i}>{list[i].productName.toString()}</option>)
         }
         return options
 
     }
-    async function getProcessNames(num) {
+    function getProcessNames(list) {
         let processNames = []
-        for (let i = 0; i < parseInt(num.data); i++) {
-            const res = await axios.get(BASE_URL + '/list/product/get/' + i.toString() + '/')
-            processNames.push(res.data.processName.toString())
+        for (let i = 0; i < list.length; i++) {
+            processNames.push(list[i].processName.toString())
         }
         return processNames
     }
-    async function getProcessIds(num) {
+    function getProcessIds(list) {
         let processIds = []
-        for (let i = 0; i < parseInt(num.data); i++) {
-            const res = await axios.get(BASE_URL + '/list/product/get/' + i.toString() + '/')
-            processIds.push(res.data.processId.toString())
+        for (let i = 0; i < list.length; i++) {
+            processIds.push(list[i].processId.toString())
         }
         return processIds
     }
@@ -62,23 +60,27 @@ export default function Home({username}) {
 
     async function handleSubmit(e) {
         e.preventDefault()
-        const product = await axios.get(BASE_URL + '/list/product/get/' + index.toString() + '/')
+        const products = await axios.get(BASE_URL + '/list/product/get/')
         const data = {
             barcode: barcode,
-            product: product.data.name.toString(),
+            product: products.data[index].productName.toString(),
             username: username,
             stage: stage,
             description: description,
+            override: override
         }
         axios.post(BASE_URL + '/barcode/', data)
-            .then((r) => console.log(r))
+            .then((r) => {
+                console.log(r)
+                setMessage(r.data)
+            })
             .catch((err) => {
                 console.log(err)
                 setMessage('Error:' + err)
             })
         setBarcode('')
         setDescription('')
-        setMessage('')
+        setOverride(false)
     }
 
     return <div className="barcode-container">
@@ -116,20 +118,25 @@ export default function Home({username}) {
             max="999999999999"
             required
             id="barcode"/>
-        <label htmlFor="description">Description</label>
       </div>
       <div className="barcode-form-group">
+          <label htmlFor="description">Description/Perm. Barcode:</label>
         <input
             type="number"
             value={description}
             onChange={(e) => setDescription(e.target.value.toString())}
-            max="999"
-            disabled={!((processIds[index].indexOf(stage) !== -1) && (stage === 'RWRK' ||stage.includes('TS') || stage.includes('TU')))}
+            max="9999999999999"
+            required={((processIds[index].indexOf(stage) !== -1) && (stage.includes('PCK') || stage === 'RWRK' ||stage.includes('TS') || stage.includes('TU')))}
+            disabled={!((processIds[index].indexOf(stage) !== -1) && (stage.includes('PCK') || stage === 'RWRK' ||stage.includes('TS') || stage.includes('TU')))}
             id="description"/>
       </div>
       <div className="barcode-form-group">
         <button type="submit">Submit</button>
       </div>
+        <div className="barcode-form-group">
+            <span>Override multiple scans(to modify existing data!): </span>
+            <input type="checkbox" value={override} onChange={(e)=>setOverride(e.target.value)} id="override" disabled={!superuser}/>
+        </div>
     </form>
   </div>
 }
