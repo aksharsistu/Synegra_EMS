@@ -1,0 +1,54 @@
+.barcode-container {
+  max-width: 500px;
+  margin: 50px auto;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.barcode-container h2 {
+  text-align: center;
+  color: #333;
+}
+
+.barcode-form-group {
+  margin-bottom: 20px;
+}
+
+.barcode-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.barcode-form-group input[type="text"],
+.barcode-form-group input[type="number"]{
+  width: 95%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.barcode-form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
