@@ -16,19 +16,19 @@ const Login = ({handleAccess}) => {
         }
         axios.post(BASE_URL + '/session/login/', data)
             .then((res) => {
-              console.log(res)
-              if(res.data.message === "success") {
-                setMessage("Login Successful")
-                handleAccess(data.username, res.data.access)
-                navigate('/home')
-              }else {
-                setMessage("Login failed. Check Username/Password.")
-              }
+                console.log(res)
+                if (res.data.message === "success") {
+                    setMessage("Login Successful")
+                    handleAccess(data.username, res.data.access)
+                    navigate('/home')
+                } else {
+                    setMessage("Login failed. Check Username/Password.")
+                }
             })
             .catch((err) => {
-              const mes = "Login failed " + err.toString()
-              setMessage(mes)
-              console.log(err)
+                const mes = "Login failed " + err.toString()
+                setMessage(mes)
+                console.log(err)
             })
 
     };

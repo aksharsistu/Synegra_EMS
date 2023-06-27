@@ -10,24 +10,27 @@ export default function Process() {
     const [processId, setProcessId] = useState('')
 
     async function refresh() {
-        const process_list = await axios.get(BASE_URL + '/list/process/get/').catch(e=>console.log(e))
+        const process_list = await axios.get(BASE_URL + '/list/process/get/').catch(e => console.log(e))
         let currentProcesses = []
         for (let i = 0; i < process_list.data.length; i++) {
             currentProcesses.push(<tr>
                 <td>{process_list.data[i].processName}</td>
                 <td>{process_list.data[i].processId}</td>
-                <td><button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button></td>
+                <td>
+                    <button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button>
+                </td>
             </tr>)
         }
         setCurrentProcesses(currentProcesses)
     }
+
     async function handleDelete(e) {
         e.preventDefault()
-        const process_list = await axios.get(BASE_URL + '/list/process/get/').catch(e=>console.log(e))
+        const process_list = await axios.get(BASE_URL + '/list/process/get/').catch(e => console.log(e))
         const data = {
             processName: process_list.data[e.target.value].processName
         }
-        axios.post(BASE_URL + '/list/process/delete/', data).then(async () => await refresh()).catch(e=>console.log(e))
+        axios.post(BASE_URL + '/list/process/delete/', data).then(async () => await refresh()).catch(e => console.log(e))
     }
 
     async function handleSubmit(e) {
@@ -36,10 +39,11 @@ export default function Process() {
             processName: processName,
             processId: processId.toUpperCase()
         }
-        axios.post(BASE_URL + '/list/process/set/', data).then(async ()=> await refresh()).catch(e=>console.log(e))
+        axios.post(BASE_URL + '/list/process/set/', data).then(async () => await refresh()).catch(e => console.log(e))
         setProcessName('')
         setProcessId('')
     }
+
     useEffect(() => {
         const effect = async () => {
             await refresh()
@@ -50,18 +54,20 @@ export default function Process() {
 
     return <div className="process-container">
         <h2>Current Processes</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Process Name</th>
-                <th>Process ID</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            {currentProcesses}
-            </tbody>
-        </table>
+        <div className="table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Process Name</th>
+                    <th>Process ID</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                {currentProcesses}
+                </tbody>
+            </table>
+        </div>
         <button className="refresh-button" onClick={refresh}>Refresh Table</button>
         <h2>Add/Modify Processes</h2>
         <form onSubmit={handleSubmit}>

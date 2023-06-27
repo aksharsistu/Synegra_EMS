@@ -13,42 +13,44 @@ import {useState} from "react";
 
 
 function App() {
-  const [superuser, setSuperuser] = useState(false)
-  const [username, setUsername] = useState('')
-  let html = []
-  html.push(<Route path="/users" element={<User/>}/>)
-  html.push(<Route path="/products" element={<Product/>}/>)
-  html.push(<Route path="/processes" element={<Process/>}/>)
-  html.push(<Route path="/stages" element={<Stage/>}/>)
-  html = superuser ? html : <></>
-  let homepage
-    if(username.length > 0){
+    const [superuser, setSuperuser] = useState(false)
+    const [username, setUsername] = useState('')
+    let html = []
+    html.push(<Route path="/users" element={<User/>}/>)
+    html.push(<Route path="/products" element={<Product/>}/>)
+    html.push(<Route path="/processes" element={<Process/>}/>)
+    html.push(<Route path="/stages" element={<Stage/>}/>)
+    html = superuser ? html : <></>
+    let homepage
+    if (username.length > 0) {
         homepage = <Route path="/home" element={<Home username={username} superuser={superuser}/>}/>
     }
-  function handleAccess(user, access) {
-    setUsername(user)
-    setSuperuser(access)
-  }
 
-  function handleLogout() {
-      setUsername('')
-      setSuperuser(false)
-      window.location.href = "/"
-      return <h4>Logged out successfully</h4>
-  }
-  return <div className="container">
-      <BrowserRouter>
-          <Routes>
-              <Route path="" element={<Layout superuser={superuser} username={username}/>}>
-                  {homepage}
-                {html}
-                <Route path="/logout" element={<Logout handleLogout={handleLogout} username={username}/>}/>
-                <Route path="*" element={<NoPage/>}/>
-                <Route index element={<Login handleAccess={handleAccess}/>}/>
-              </Route>
-          </Routes>
-      </BrowserRouter>
-  </div>
+    function handleAccess(user, access) {
+        setUsername(user)
+        setSuperuser(access)
+    }
+
+    function handleLogout() {
+        setUsername('')
+        setSuperuser(false)
+        window.location.href = "/"
+        return <h4>Logged out successfully</h4>
+    }
+
+    return <div className="container">
+        <BrowserRouter>
+            <Routes>
+                <Route path="" element={<Layout superuser={superuser} username={username}/>}>
+                    {homepage}
+                    {html}
+                    <Route path="/logout" element={<Logout handleLogout={handleLogout} username={username}/>}/>
+                    <Route path="*" element={<NoPage/>}/>
+                    <Route index element={<Login handleAccess={handleAccess}/>}/>
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    </div>
 }
 
 export default App;

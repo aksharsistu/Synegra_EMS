@@ -4,10 +4,10 @@ import {Link} from "react-router-dom";
 
 export default function NavBar({superuser, username}) {
     let logout = <li><Link to="/logout" className="link">Logout</Link></li>
-    logout = username ? logout : <></>
+    logout = username ? logout : <li><Link to="/" className="link">Login</Link></li>
     const u = <ul className="nav-links">
         {logout}
-        </ul>
+    </ul>
 
     const su = <ul className="nav-links">
         <li><Link to="/home" className="link">Home</Link></li>
@@ -16,7 +16,7 @@ export default function NavBar({superuser, username}) {
         <li><Link to="/processes" className="link">Modify Processes</Link></li>
         <li><Link to="/stages" className="link">Modify Stages</Link></li>
         {logout}
-        </ul>
+    </ul>
 
     let html = superuser ? su : u
     return <nav className="navbar">

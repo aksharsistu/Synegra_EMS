@@ -26,6 +26,7 @@ export default function Home({username, superuser}) {
         setProcessIds(getProcessIds(arr.data))
         setProcessNames(getProcessNames(arr.data))
     }
+
     function getOptions(list) {
         let options = []
         for (let i = 0; i < list.length; i++) {
@@ -34,6 +35,7 @@ export default function Home({username, superuser}) {
         return options
 
     }
+
     function getProcessNames(list) {
         let processNames = []
         for (let i = 0; i < list.length; i++) {
@@ -41,6 +43,7 @@ export default function Home({username, superuser}) {
         }
         return processNames
     }
+
     function getProcessIds(list) {
         let processIds = []
         for (let i = 0; i < list.length; i++) {
@@ -49,13 +52,9 @@ export default function Home({username, superuser}) {
         return processIds
     }
 
-    function handleSelect(e) {
-        setIndex(parseInt(e.target.value))
-    }
-    
     useEffect(() => {
-        getStage()
-        getDetails()
+        getStage().catch(e => setMessage(e))
+        getDetails().catch(e => setMessage(e))
     }, [])
 
     async function handleSubmit(e) {
@@ -84,59 +83,60 @@ export default function Home({username, superuser}) {
     }
 
     return <div className="barcode-container">
-    <h2>Product Barcode Form</h2>
-    <span className="message">{message}</span>
-    <form id="barcodeForm" onSubmit={handleSubmit}>
-      <div className="barcode-form-group">
-       <label htmlFor="product">Product:</label>
-        <select
-            name="product"
-            id="product"
-            value={index}
-            onChange={handleSelect}
-        >{options}</select>
-      </div>
-      <div className="barcode-form-group">
-        <label htmlFor="stage">Stage:</label>
-        <input type="text" id="stage" disabled value={stage}/>
-      </div>
-      <div className="barcode-form-group">
-        <label htmlFor="processId">Process ID:</label>
-        <input type="text" id="processId" disabled value={processIds[index]}/>
-      </div>
-      <div className="barcode-form-group">
-        <label htmlFor="processName">Process Name:</label>
-        <input type="text" id="processName" disabled value={processNames[index]}/>
-      </div>
-      <div className="barcode-form-group">
-        <label htmlFor="barcode">Barcode:</label>
-        <input
-            type="number"
-            value={barcode}
-            onChange={(e) => setBarcode(e.target.value.toString())}
-            disabled={!(processIds[index].indexOf(stage) !== -1)}
-            max="999999999999"
-            required
-            id="barcode"/>
-      </div>
-      <div className="barcode-form-group">
-          <label htmlFor="description">Description/Perm. Barcode:</label>
-        <input
-            type="number"
-            value={description}
-            onChange={(e) => setDescription(e.target.value.toString())}
-            max="9999999999999"
-            required={((processIds[index].indexOf(stage) !== -1) && (stage.includes('PCK') || stage === 'RWRK' ||stage.includes('TS') || stage.includes('TU')))}
-            disabled={!((processIds[index].indexOf(stage) !== -1) && (stage.includes('PCK') || stage === 'RWRK' ||stage.includes('TS') || stage.includes('TU')))}
-            id="description"/>
-      </div>
-      <div className="barcode-form-group">
-        <button type="submit">Submit</button>
-      </div>
-        <div className="barcode-form-group">
-            <span>Override multiple scans(to modify existing data!): </span>
-            <input type="checkbox" value={override} onChange={(e)=>setOverride(e.target.value)} id="override" disabled={!superuser}/>
-        </div>
-    </form>
-  </div>
+        <h2>Product Barcode Form</h2>
+        <span className="message">{message}</span>
+        <form id="barcodeForm" onSubmit={handleSubmit}>
+            <div className="barcode-form-group">
+                <label htmlFor="product">Product:</label>
+                <select
+                    name="product"
+                    id="product"
+                    value={index}
+                    onChange={(e) => setIndex(parseInt(e.target.value))}
+                >{options}</select>
+            </div>
+            <div className="barcode-form-group">
+                <label htmlFor="stage">Stage:</label>
+                <input type="text" id="stage" disabled value={stage}/>
+            </div>
+            <div className="barcode-form-group">
+                <label htmlFor="processId">Process ID:</label>
+                <input type="text" id="processId" disabled value={processIds[index]}/>
+            </div>
+            <div className="barcode-form-group">
+                <label htmlFor="processName">Process Name:</label>
+                <input type="text" id="processName" disabled value={processNames[index]}/>
+            </div>
+            <div className="barcode-form-group">
+                <label htmlFor="barcode">Barcode:</label>
+                <input
+                    type="number"
+                    value={barcode}
+                    onChange={(e) => setBarcode(e.target.value.toString())}
+                    disabled={!(processIds[index].indexOf(stage) !== -1)}
+                    max="999999999999"
+                    required
+                    id="barcode"/>
+            </div>
+            <div className="barcode-form-group">
+                <label htmlFor="description">Description/Permanent Barcode:</label>
+                <input
+                    type="number"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value.toString())}
+                    max="9999999999999"
+                    required={((processIds[index].indexOf(stage) !== -1) && (stage.includes('PCK') || stage === 'RWRK' || stage.includes('TS') || stage.includes('TU')))}
+                    disabled={!((processIds[index].indexOf(stage) !== -1) && (stage.includes('PCK') || stage === 'RWRK' || stage.includes('TS') || stage.includes('TU')))}
+                    id="description"/>
+            </div>
+            <div className="barcode-form-group">
+                <button type="submit">Submit</button>
+            </div>
+            <div className="barcode-form-group">
+                <span>Override multiple scans(to modify existing data!): </span>
+                <input type="checkbox" value={override} onChange={(e) => setOverride(e.target.value)} id="override"
+                       disabled={!superuser}/>
+            </div>
+        </form>
+    </div>
 }

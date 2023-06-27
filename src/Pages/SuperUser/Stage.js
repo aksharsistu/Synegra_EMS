@@ -7,7 +7,8 @@ const BASE_URL = 'http://localhost:8000'
 export default function Stage() {
     const [currentStages, setCurrentStages] = useState([])
     const [ip, setIp] = useState('')
-    const[stageId, setStageId] = useState('')
+    const [stageId, setStageId] = useState('')
+
     async function refresh() {
         const stage_list = await axios.get(BASE_URL + '/stage/stagedata/')
         console.log(stage_list.data[0])
@@ -16,7 +17,9 @@ export default function Stage() {
             currentStages.push(<tr>
                 <td>{stage_list.data[i].ip}</td>
                 <td>{stage_list.data[i].stage}</td>
-                <td><button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button></td>
+                <td>
+                    <button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button>
+                </td>
             </tr>)
         }
         setCurrentStages(currentStages)
@@ -25,8 +28,8 @@ export default function Stage() {
     async function handleDelete(e) {
         e.preventDefault()
         const stage_list = await axios.get(BASE_URL + '/stage/stagedata/')
-        const data ={
-            ip:stage_list.data[e.target.value].ip
+        const data = {
+            ip: stage_list.data[e.target.value].ip
         }
         axios.post(BASE_URL + '/stage/delete/', data).then(async () => await refresh()).catch(err => console.log(err))
     }
@@ -43,7 +46,7 @@ export default function Stage() {
     }
 
     useEffect(() => {
-        const effect = async () =>{
+        const effect = async () => {
             await refresh()
         }
         effect()
@@ -51,18 +54,20 @@ export default function Stage() {
 
     return <div className="stage-container">
         <h2>Current Stages</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>IP Address</th>
-                <th>Stage Name</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            {currentStages}
-            </tbody>
-        </table>
+        <div className="table">
+            <table>
+                <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Stage Name</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                {currentStages}
+                </tbody>
+            </table>
+        </div>
         <button className="refresh-button" onClick={refresh}>Refresh Table</button>
         <h2>Add/Modify Stages</h2>
         <form onSubmit={handleSubmit}>

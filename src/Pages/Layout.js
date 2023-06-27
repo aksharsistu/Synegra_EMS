@@ -5,8 +5,8 @@ import './layout.css'
 
 export default function Layout({superuser, username}) {
     return <>
-        <NavBar superuser = {superuser} username={username}/>
+        <NavBar superuser={superuser} username={username}/>
         <Outlet/>
-        <footer>Software made by BITSians for Synegra EMS</footer>
+        <footer>Software made for Synegra EMS</footer>
     </>
 }

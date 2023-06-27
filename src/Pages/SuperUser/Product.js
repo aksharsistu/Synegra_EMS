@@ -13,36 +13,41 @@ export default function Product() {
     const [productCode, setProductCode] = useState('')
 
     async function refresh() {
-        const product_list = await axios.get(BASE_URL + '/list/product/get/').catch(e=>console.log(e))
+        const product_list = await axios.get(BASE_URL + '/list/product/get/').catch(e => console.log(e))
         let currentProducts = []
-        for(let i = 0; i < product_list.data.length; i++) {
+        for (let i = 0; i < product_list.data.length; i++) {
             currentProducts.push(<tr>
                 <td>{product_list.data[i].productName}</td>
                 <td>{product_list.data[i].processName}</td>
                 <td>{product_list.data[i].fgCode}</td>
                 <td>{product_list.data[i].productCode}</td>
-                <td><button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button></td>
+                <td>
+                    <button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button>
+                </td>
             </tr>)
         }
         setCurrentProducts(currentProducts)
     }
+
     async function getOptions() {
         let option = []
-        const process_list = await axios.get(BASE_URL + '/list/process/get/').catch(e=>console.log(e))
-        for(let i = 0; i < process_list.data.length; i++) {
-            option.push(<option value={process_list.data[i].processName} key={i}>{process_list.data[i].processName}</option> )
+        const process_list = await axios.get(BASE_URL + '/list/process/get/').catch(e => console.log(e))
+        for (let i = 0; i < process_list.data.length; i++) {
+            option.push(<option value={process_list.data[i].processName}
+                                key={i}>{process_list.data[i].processName}</option>)
         }
         setOptions(option)
     }
 
     async function handleDelete(e) {
         e.preventDefault()
-        const product_list = await axios.get(BASE_URL + '/list/product/get/').catch(e=>console.log(e))
+        const product_list = await axios.get(BASE_URL + '/list/product/get/').catch(e => console.log(e))
         const data = {
             productName: product_list.data[e.target.value].productName
         }
-        axios.post(BASE_URL + '/list/product/delete/', data).then(async ()=> await refresh())
+        axios.post(BASE_URL + '/list/product/delete/', data).then(async () => await refresh())
     }
+
     async function handleSubmit(e) {
         e.preventDefault()
         const data = {
@@ -55,6 +60,7 @@ export default function Product() {
         setProductName('')
         setProcessName('')
     }
+
     useEffect(() => {
         const effect = async () => {
             await refresh()
@@ -65,20 +71,22 @@ export default function Product() {
 
     return <div className="product-container">
         <h2>Current Products</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Process</th>
-                <th>FG Code</th>
-                <th>Prod. Code</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            {currentProducts}
-            </tbody>
-        </table>
+        <div className="table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Process</th>
+                    <th>FG Code</th>
+                    <th>Prod. Code</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                {currentProducts}
+                </tbody>
+            </table>
+        </div>
         <button className="refresh-button" onClick={refresh}>Refresh Table</button>
         <h2>Add/Modify Products</h2>
         <form onSubmit={handleSubmit}>
