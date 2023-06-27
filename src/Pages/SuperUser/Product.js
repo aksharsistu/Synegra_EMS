@@ -2,9 +2,8 @@ import React, {useEffect, useState} from "react";
 import './product.css'
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:8000'
 
-export default function Product() {
+export default function Product({BASE_URL}) {
     const [currentProducts, setCurrentProducts] = useState([])
     const [options, setOptions] = useState([])
     const [productName, setProductName] = useState('')
@@ -33,10 +32,11 @@ export default function Product() {
         let option = []
         const process_list = await axios.get(BASE_URL + '/list/process/get/').catch(e => console.log(e))
         for (let i = 0; i < process_list.data.length; i++) {
-            option.push(<option value={process_list.data[i].processName}
-                                key={i}>{process_list.data[i].processName}</option>)
+            option.push(<option value={process_list.data[i].processName.toString()}
+                                key={i}>{process_list.data[i].processName.toString()}</option>)
         }
         setOptions(option)
+        setProcessName(process_list.data[0].processName.toString())
     }
 
     async function handleDelete(e) {
@@ -59,6 +59,8 @@ export default function Product() {
         axios.post(BASE_URL + '/list/product/set/', data).then(async () => await refresh())
         setProductName('')
         setProcessName('')
+        setFgCode('')
+        setProductCode('')
     }
 
     useEffect(() => {

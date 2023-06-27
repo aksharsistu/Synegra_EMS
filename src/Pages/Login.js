@@ -3,9 +3,8 @@ import './login.css';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
-const BASE_URL = 'http://localhost:8000'
 
-const Login = ({handleAccess}) => {
+const Login = ({handleAccess, BASE_URL}) => {
     const [message, setMessage] = useState("")
     const navigate = useNavigate()
     const handleLogin = (event) => {
@@ -41,11 +40,13 @@ const Login = ({handleAccess}) => {
                     type="text"
                     id="username"
                     placeholder="Username"
+                    maxLength={10}
                 />
                 <input
                     type="password"
                     id="password"
                     placeholder="Password"
+                    maxLength={10}
                 />
                 <button type="submit">Login</button>
             </form>

@@ -2,9 +2,8 @@ import React, {useState} from 'react';
 import './user.css';
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:8000'
 
-const UserDeleteForm = () => {
+const UserDeleteForm = ({BASE_URL}) => {
     const [message, setMessage] = useState('')
     const [username, setUsername] = useState('')
     function handleSubmit(e) {
@@ -33,7 +32,7 @@ const UserDeleteForm = () => {
     </div>
 }
 
-const UserRegistrationForm = () => {
+const UserRegistrationForm = ({BASE_URL}) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
@@ -143,7 +142,7 @@ const UserRegistrationForm = () => {
                     <button type="submit">Register</button>
                 </form>
             </div>
-            <UserDeleteForm/>
+            <UserDeleteForm BASE_URL={BASE_URL}/>
         </div>
     );
 };

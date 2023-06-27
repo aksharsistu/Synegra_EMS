@@ -12,18 +12,18 @@ import NoPage from "./Pages/NoPage";
 import {useState} from "react";
 
 
-function App() {
+function App({BASE_URL}) {
     const [superuser, setSuperuser] = useState(false)
     const [username, setUsername] = useState('')
     let html = []
-    html.push(<Route path="/users" element={<User/>}/>)
-    html.push(<Route path="/products" element={<Product/>}/>)
-    html.push(<Route path="/processes" element={<Process/>}/>)
-    html.push(<Route path="/stages" element={<Stage/>}/>)
+    html.push(<Route path="/users" element={<User BASE_URL={BASE_URL}/>}/>)
+    html.push(<Route path="/products" element={<Product BASE_URL={BASE_URL}/>}/>)
+    html.push(<Route path="/processes" element={<Process BASE_URL={BASE_URL}/>}/>)
+    html.push(<Route path="/stages" element={<Stage BASE_URL={BASE_URL}/>}/>)
     html = superuser ? html : <></>
     let homepage
     if (username.length > 0) {
-        homepage = <Route path="/home" element={<Home username={username} superuser={superuser}/>}/>
+        homepage = <Route path="/home" element={<Home username={username} superuser={superuser} BASE_URL={BASE_URL}/>}/>
     }
 
     function handleAccess(user, access) {
@@ -44,9 +44,9 @@ function App() {
                 <Route path="" element={<Layout superuser={superuser} username={username}/>}>
                     {homepage}
                     {html}
-                    <Route path="/logout" element={<Logout handleLogout={handleLogout} username={username}/>}/>
+                    <Route path="/logout" element={<Logout handleLogout={handleLogout} username={username} BASE_URL={BASE_URL}/>}/>
                     <Route path="*" element={<NoPage/>}/>
-                    <Route index element={<Login handleAccess={handleAccess}/>}/>
+                    <Route index element={<Login handleAccess={handleAccess} BASE_URL={BASE_URL}/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>

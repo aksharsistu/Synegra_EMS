@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react'
 import './home.css'
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:8000'
 
-export default function Home({username, superuser}) {
+export default function Home({username, superuser, BASE_URL}) {
     const [barcode, setBarcode] = useState('')
     const [description, setDescription] = useState('')
     const [index, setIndex] = useState(0)
@@ -16,12 +15,12 @@ export default function Home({username, superuser}) {
     const [override, setOverride] = useState(false)
 
     async function getStage() {
-        const stg = await axios.get(BASE_URL + '/stage/get/')
+        const stg = await axios.get(BASE_URL + '/stage/get/').catch(err => setMessage(err))
         setStage(stg.data.toString())
     }
 
     async function getDetails() {
-        const arr = await axios.get(BASE_URL + '/list/product/get/')
+        const arr = await axios.get(BASE_URL + '/list/product/get/').catch(err => setMessage(err))
         setOptions(getOptions(arr.data))
         setProcessIds(getProcessIds(arr.data))
         setProcessNames(getProcessNames(arr.data))

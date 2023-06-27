@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react'
 import './stage.css'
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:8000'
 
-export default function Stage() {
+export default function Stage({BASE_URL}) {
     const [currentStages, setCurrentStages] = useState([])
     const [ip, setIp] = useState('')
     const [stageId, setStageId] = useState('')
