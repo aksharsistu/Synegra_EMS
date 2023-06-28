@@ -7,6 +7,7 @@ export default function Stage({BASE_URL}) {
     const [currentStages, setCurrentStages] = useState([])
     const [ip, setIp] = useState('')
     const [stageId, setStageId] = useState('')
+    const [place, setPlace] = useState('end')
 
     async function refresh() {
         const stage_list = await axios.get(BASE_URL + '/stage/stagedata/')
@@ -16,6 +17,7 @@ export default function Stage({BASE_URL}) {
             currentStages.push(<tr>
                 <td>{stage_list.data[i].ip}</td>
                 <td>{stage_list.data[i].stage}</td>
+                <td>{stage_list.data[i].place.toUpperCase()}</td>
                 <td>
                     <button type="submit" value={i} onClick={handleDelete} className="delete-btn">Delete</button>
                 </td>
@@ -37,11 +39,13 @@ export default function Stage({BASE_URL}) {
         e.preventDefault()
         const data = {
             ip: ip,
-            stage_id: stageId.toUpperCase()
+            stage_id: stageId.toUpperCase(),
+            place:place
         }
         axios.post(BASE_URL + '/stage/set/', data).then(async () => await refresh()).catch(err => console.log(err))
         setIp('')
         setStageId('')
+        setPlace('end')
     }
 
     useEffect(() => {
@@ -59,6 +63,7 @@ export default function Stage({BASE_URL}) {
                 <tr>
                     <th>IP Address</th>
                     <th>Stage Name</th>
+                    <th>Place</th>
                     <th>Delete</th>
                 </tr>
                 </thead>
@@ -79,14 +84,23 @@ export default function Stage({BASE_URL}) {
                        onChange={(e) => setIp(e.target.value)}
                        required/>
             </div>
-            <div className="stage-form-group">
-                <label htmlFor="stage-name">Stage Name:</label>
-                <input type="text"
+            <div className="stage-selection">
+                <div className="stage-form-group2">
+                    <label htmlFor="stage-name">Stage Name:</label>
+                    <input type="text"
                        id="stage_id"
                        name="stage-name"
                        value={stageId.toUpperCase()}
                        onChange={(e) => setStageId(e.target.value)}
                        required/>
+                </div>
+                <div className="stage-form-group2">
+                    <label htmlFor="place">Place:</label>
+                    <select name="place" id="place" value={place} onChange={(e)=>setPlace(e.target.value)} defaultValue="end">
+                        <option value="start">Start</option>
+                        <option value="end">End</option>
+                    </select>
+                </div>
             </div>
             <div className="stage-form-group">
                 <input type="submit" className="btn-submit" value="Submit"/>

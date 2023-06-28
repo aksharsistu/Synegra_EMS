@@ -8,6 +8,7 @@ export default function Home({username, superuser, BASE_URL}) {
     const [description, setDescription] = useState('')
     const [index, setIndex] = useState(0)
     const [stage, setStage] = useState('not defined')
+    const [place, setPlace] = useState('end')
     const [options, setOptions] = useState([<option value=""></option>])
     const [processIds, setProcessIds] = useState([''])
     const [processNames, setProcessNames] = useState([''])
@@ -16,7 +17,8 @@ export default function Home({username, superuser, BASE_URL}) {
 
     async function getStage() {
         const stg = await axios.get(BASE_URL + '/stage/get/').catch(err => setMessage(err))
-        setStage(stg.data.toString())
+        setStage(stg.data.stage.toString())
+        setPlace(stg.data.place.toString())
     }
 
     async function getDetails() {
@@ -98,7 +100,7 @@ export default function Home({username, superuser, BASE_URL}) {
             </div>
             <div className="barcode-form-group">
                 <label htmlFor="stage">Stage:</label>
-                <input type="text" id="stage" disabled value={stage}/>
+                <input type="text" id="stage" disabled value={stage + '-' + place.toUpperCase()}/>
             </div>
             <div className="barcode-form-group">
                 <label htmlFor="processId">Process ID:</label>
