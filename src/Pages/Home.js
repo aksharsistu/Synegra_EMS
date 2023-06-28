@@ -76,8 +76,10 @@ export default function Home({username, superuser, BASE_URL}) {
                 console.log(err)
                 setMessage('Error:' + err)
             })
-        setBarcode('')
-        setDescription('')
+        setTimeout(() => {
+            setBarcode('')
+            setDescription('')
+        }, 3000)
         setOverride(false)
     }
 
