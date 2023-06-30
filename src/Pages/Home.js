@@ -66,6 +66,7 @@ export default function Home({username, superuser, BASE_URL}) {
             product: products.data[index].productName.toString(),
             username: username,
             stage: stage,
+            place: place,
             description: description,
             override: override
         }

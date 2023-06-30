@@ -99,6 +99,8 @@ export default function Stage({BASE_URL}) {
                     <select name="place" id="place" value={place} onChange={(e)=>setPlace(e.target.value)} defaultValue="end">
                         <option value="start">Start</option>
                         <option value="end">End</option>
+                        <option value="qa">QA</option>
+                        <option value="rework">Rework</option>
                     </select>
                 </div>
             </div>
