@@ -137,9 +137,9 @@ export default function Home({username, superuser, BASE_URL}) {
                 <button type="submit">Submit</button>
             </div>
             <div className="barcode-form-group">
-                <span>Override multiple scans(to modify existing data!): </span>
+                <span>Override multiple scans(to modify/QA/Rework): </span>
                 <input type="checkbox" value={override} onChange={(e) => setOverride(e.target.value)} id="override"
-                       disabled={!superuser}/>
+                       disabled={!(superuser || place === 'qa' || place === 'rework')}/>
             </div>
         </form>
     </div>

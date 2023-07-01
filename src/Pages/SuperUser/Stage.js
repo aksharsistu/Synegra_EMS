@@ -5,9 +5,12 @@ import axios from "axios";
 
 export default function Stage({BASE_URL}) {
     const [currentStages, setCurrentStages] = useState([])
+    const [message, setMessage] = useState('')
     const [ip, setIp] = useState('')
     const [stageId, setStageId] = useState('')
-    const [place, setPlace] = useState('end')
+    const [place, setPlace] = useState('')
+    const [options, setOptions] = useState([])
+    const [placeEnable, setPlaceEnable] = useState({start: false, end: false, qa: false, rework: false})
 
     async function refresh() {
         const stage_list = await axios.get(BASE_URL + '/stage/stagedata/')
@@ -24,6 +27,12 @@ export default function Stage({BASE_URL}) {
             </tr>)
         }
         setCurrentStages(currentStages)
+    }
+
+    async function getStages() {
+        const stages_list = await axios.get(BASE_URL + '/stage/stagelist/')
+        console.log(stages_list)
+        setOptions(stages_list.data)
     }
 
     async function handleDelete(e) {
@@ -45,15 +54,30 @@ export default function Stage({BASE_URL}) {
         axios.post(BASE_URL + '/stage/set/', data).then(async () => await refresh()).catch(err => console.log(err))
         setIp('')
         setStageId('')
-        setPlace('end')
+        setPlace('')
+        setMessage('Success')
     }
 
     useEffect(() => {
-        const effect = async () => {
+        const effect1 = async () => {
             await refresh()
         }
-        effect()
+        const effect2 = async () => {
+            await getStages()
+        }
+        effect1()
+        effect2()
     }, [])
+
+    const handleChange = async (event) => {
+        setStageId(event.target.value);
+        const data = {
+            stage: event.target.value
+        }
+        const res = await axios.post(BASE_URL + '/place/get/', data)
+        console.log(res.data)
+        setPlaceEnable(res.data)
+    }
 
     return <div className="stage-container">
         <h2>Current Stages</h2>
@@ -75,6 +99,7 @@ export default function Stage({BASE_URL}) {
         <button className="refresh-button" onClick={refresh}>Refresh Table</button>
         <h2>Add/Modify Stages</h2>
         <form onSubmit={handleSubmit}>
+            <span className="message">{message}</span>
             <div className="stage-form-group">
                 <label htmlFor="ip-address">IP Address:</label>
                 <input type="text"
@@ -87,20 +112,21 @@ export default function Stage({BASE_URL}) {
             <div className="stage-selection">
                 <div className="stage-form-group2">
                     <label htmlFor="stage-name">Stage Name:</label>
-                    <input type="text"
-                       id="stage_id"
-                       name="stage-name"
-                       value={stageId.toUpperCase()}
-                       onChange={(e) => setStageId(e.target.value)}
-                       required/>
+                    <select value={stageId} onChange={handleChange}>
+                        <option value="">Select a stage</option>
+                        {options.map((option, index) => (
+                          <option key={index} value={option}>{option}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className="stage-form-group2">
                     <label htmlFor="place">Place:</label>
-                    <select name="place" id="place" value={place} onChange={(e)=>setPlace(e.target.value)} defaultValue="end">
-                        <option value="start">Start</option>
-                        <option value="end">End</option>
-                        <option value="qa">QA</option>
-                        <option value="rework">Rework</option>
+                    <select name="place" id="place" value={place} onChange={(e)=>setPlace(e.target.value)}>
+                        <option value="">Select a substage</option>
+                        <option value="start" disabled={!placeEnable.start}>Start</option>
+                        <option value="end" disabled={!placeEnable.end}>End</option>
+                        <option value="qa" disabled={!placeEnable.qa}>QA</option>
+                        <option value="rework" disabled={!placeEnable.rework}>Rework</option>
                     </select>
                 </div>
             </div>
