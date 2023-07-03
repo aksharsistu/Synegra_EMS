@@ -1,10 +1,16 @@
+// Polyfills:
+import 'react-app-polyfill/ie9'
+import 'react-app-polyfill/stable'
+import 'babel-es6-polyfill/es6-shim'
+import 'babel-es6-polyfill/browser-polyfill'
+import 'core-js/es/object/get-own-property-descriptors'
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import 'react-app-polyfill/ie9'
 
-const BASE_URL = 'http://169.254.222.66:8000'
+const BASE_URL = 'http://10.4.19.2:8000'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

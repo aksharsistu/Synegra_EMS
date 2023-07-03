@@ -82,7 +82,7 @@ export default function Home({username, superuser, BASE_URL}) {
         setTimeout(() => {
             setBarcode('')
             setDescription('')
-        }, 3000)
+        }, 1000)
         setOverride(false)
     }
 

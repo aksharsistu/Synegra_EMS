@@ -23,7 +23,14 @@ const UserDeleteForm = ({BASE_URL}) => {
         <form id="deleteForm" onSubmit={handleSubmit}>
             <div className="delete-form-group">
                 <label htmlFor="username">Username:</label>
-                <input type="text" id="username" name="username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
+                <input type="text"
+                       id="username"
+                       name="username"
+                       required
+                       value={username}
+                       onChange={(e) => setUsername(e.target.value)}
+                       maxLength={10}
+                />
             </div>
             <div className="delete-form-group">
                 <input type="submit" className="btn-delete" value="Delete"/>
@@ -103,6 +110,7 @@ const UserRegistrationForm = ({BASE_URL}) => {
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            maxLength={10}
                             required
                         />
                     </div>
@@ -114,6 +122,7 @@ const UserRegistrationForm = ({BASE_URL}) => {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            maxLength={10}
                             required
                         />
                     </div>
@@ -125,6 +134,7 @@ const UserRegistrationForm = ({BASE_URL}) => {
                             id="employeeId"
                             value={employeeId}
                             onChange={(e) => setEmployeeId(e.target.value)}
+                            maxLength={10}
                             required
                         />
                     </div>
