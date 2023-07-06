@@ -14,6 +14,7 @@ export default function Home({username, superuser, BASE_URL}) {
     const [processNames, setProcessNames] = useState([''])
     const [message, setMessage] = useState('')
     const [override, setOverride] = useState(false)
+    const [quantity, setQuantity] = useState('')
 
     async function getStage() {
         const stg = await axios.get(BASE_URL + '/stage/get/').catch(err => setMessage(err))
@@ -53,10 +54,31 @@ export default function Home({username, superuser, BASE_URL}) {
         return processIds
     }
 
+    async function getQuantity() {
+        const products = await axios.get(BASE_URL + '/list/product/get/')
+        const stg = await axios.get(BASE_URL + '/stage/get/')
+        const data = {
+            product: products.data[index].productName,
+            stage: stg.data.stage
+        }
+        const quantity = await axios.post(BASE_URL + '/stage/quantity/', data)
+        setQuantity(quantity.data.toString())
+    }
+
     useEffect(() => {
-        getStage().catch(e => setMessage(e))
-        getDetails().catch(e => setMessage(e))
+        const events = async () => {
+            await getStage()
+            await getDetails()
+            await getQuantity()
+        }
+        events()
     }, [])
+    useEffect(() => {
+        const events = async () => {
+            await getQuantity()
+        }
+        events()
+    }, [index])
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -72,7 +94,6 @@ export default function Home({username, superuser, BASE_URL}) {
         }
         axios.post(BASE_URL + '/barcode/', data)
             .then((r) => {
-                console.log(r)
                 setMessage(r.data)
             })
             .catch((err) => {
@@ -83,6 +104,7 @@ export default function Home({username, superuser, BASE_URL}) {
             setBarcode('')
             setDescription('')
         }, 1000)
+        await getQuantity()
         setOverride(false)
     }
 
@@ -98,6 +120,7 @@ export default function Home({username, superuser, BASE_URL}) {
                     value={index}
                     onChange={(e) => setIndex(parseInt(e.target.value))}
                 >{options}</select>
+                <span className="quantity"><strong>Quantity:</strong> {quantity}</span>
             </div>
             <div className="barcode-form-group">
                 <label htmlFor="stage">Stage:</label>
@@ -137,9 +160,9 @@ export default function Home({username, superuser, BASE_URL}) {
                 <button type="submit">Submit</button>
             </div>
             <div className="barcode-form-group">
-                <span>Override multiple scans(to modify/QA/Rework): </span>
+                <span>Override multiple scans(to modify/QA/Rework/End): </span>
                 <input type="checkbox" value={override} onChange={(e) => setOverride(e.target.value)} id="override"
-                       disabled={!(superuser || place === 'qa' || place === 'rework')}/>
+                       disabled={!(superuser || place === 'qa' || place === 'rework' || place === 'end')}/>
             </div>
         </form>
     </div>

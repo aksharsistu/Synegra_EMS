@@ -10,6 +10,8 @@ export default function Product({BASE_URL}) {
     const [processName, setProcessName] = useState('')
     const [fgCode, setFgCode] = useState('')
     const [productCode, setProductCode] = useState('')
+    const [maxQuantity, setMaxQuantity] = useState(0)
+    const [startSno, setStartSno] = useState(0)
 
     async function refresh() {
         const product_list = await axios.get(BASE_URL + '/list/product/get/').catch(e => console.log(e))
@@ -39,6 +41,18 @@ export default function Product({BASE_URL}) {
         setProcessName(process_list.data[0].processName.toString())
     }
 
+
+    async function handleChange(e) {
+        e.preventDefault()
+        setMaxQuantity(parseInt(e.target.value))
+        const data = {
+            productName: productName,
+            maxQuantity: maxQuantity
+        }
+        const sno = await axios.post(BASE_URL + '/barcode/generate/', data)
+        setStartSno(parseInt(sno.data))
+    }
+
     async function handleDelete(e) {
         e.preventDefault()
         const product_list = await axios.get(BASE_URL + '/list/product/get/').catch(e => console.log(e))
@@ -54,13 +68,17 @@ export default function Product({BASE_URL}) {
             productName: productName,
             processName: processName,
             fgCode: fgCode,
-            productCode: productCode
+            productCode: productCode,
+            maxQuantity: maxQuantity,
+            startSno: startSno,
+            endSno: startSno + maxQuantity-1
         }
         axios.post(BASE_URL + '/list/product/set/', data).then(async () => await refresh())
         setProductName('')
         setProcessName('')
         setFgCode('')
         setProductCode('')
+        setMaxQuantity(0)
     }
 
     useEffect(() => {
@@ -102,30 +120,49 @@ export default function Product({BASE_URL}) {
                        required/>
             </div>
             <div className="product-form-group">
-                <label htmlFor="processName">Stage Name:</label>
+                <label htmlFor="processName">Process Name:</label>
                 <select id="processName"
                         name="processName"
                         value={processName}
                         onChange={(e) => setProcessName(e.target.value)}
                         required>{options}</select>
             </div>
-            <div className="product-form-group">
-                <label htmlFor="fgCode">FG Code:</label>
-                <input type="text"
-                       id="fgCode"
-                       name="fgCode"
-                       value={fgCode}
-                       onChange={(e) => setFgCode(e.target.value)}
-                       required/>
+            <div className="group-club">
+                <div className="code-group">
+                    <label htmlFor="fgCode">FG Code:</label>
+                    <input type="text"
+                           id="fgCode"
+                           name="fgCode"
+                           value={fgCode}
+                           onChange={(e) => setFgCode(e.target.value)}
+                           required/>
+                </div>
+                <div className="code-group">
+                    <label htmlFor="productCode">Product Code:</label>
+                    <input type="text"
+                           id="productCode"
+                           name="productCode"
+                           value={productCode}
+                           onChange={(e) => setProductCode(e.target.value)}
+                           required/>
+                </div>
             </div>
-            <div className="product-form-group">
-                <label htmlFor="productCode">Product Code:</label>
-                <input type="text"
-                       id="productCode"
-                       name="productCode"
-                       value={productCode}
-                       onChange={(e) => setProductCode(e.target.value)}
-                       required/>
+            <div className="group-club">
+                <div className="code-group">
+                        <label htmlFor="maxQuantity">Max. Quantity:</label>
+                        <input type="number"
+                               id="maxQuantity"
+                               name="maxQuantity"
+                               value={maxQuantity}
+                               onChange={handleChange}
+                               required/>
+                </div>
+                <div className="barcode-group">
+                    <label htmlFor="startSno">Start S.No.: </label>
+                    <input type="text" id="startSno" name="startSno" value={startSno} onChange={e => setStartSno(parseInt(e.target.value))}/>
+                    <label htmlFor="endSno">End S.No.: </label>
+                    <input type="text" id="endSno" name="endSno" value={startSno + maxQuantity-1} disabled/>
+                </div>
             </div>
             <div className="product-form-group">
                 <input type="submit" className="btn-submit" value="Submit"/>

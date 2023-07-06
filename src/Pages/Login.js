@@ -15,7 +15,6 @@ const Login = ({handleAccess, BASE_URL}) => {
         }
         axios.post(BASE_URL + '/session/login/', data)
             .then((res) => {
-                console.log(res)
                 if (res.data.message === "success") {
                     setMessage("Login Successful")
                     handleAccess(data.username, res.data.access)
