@@ -50,7 +50,6 @@ const UserRegistrationForm = ({BASE_URL}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Perform registration logic here or send data to backend
         let data = {
             firstname: firstName,
             lastname: lastName,

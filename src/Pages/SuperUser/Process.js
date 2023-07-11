@@ -3,6 +3,54 @@ import './process.css'
 import axios from "axios";
 
 
+function Place({BASE_URL, processId, processName}) {
+    const stages = processId.split('-')
+    let html = []
+    let placeValues = []
+    for(let i = 0; i < stages.length; i++) {
+        placeValues.push({process: processName, stage: stages[i], start: false, end: false, qa: false, rework: false, final: 'end'})
+    }
+    const [place, setPlace] = useState(placeValues)
+
+    for(let i = 0; i < stages.length; i++){
+        html.push(
+            <tr>
+                <td>{stages[i]}</td>
+                <td><input type="checkbox" value={start} onChange={e => setPlace(place.slice()[i].start = e.target.value)}/></td>
+                <td><input type="checkbox" value={start} onChange={e => setStart}/></td>
+                <td><input type="checkbox" value={start} onChange={e => setStart}/></td>
+                <td><input type="checkbox" value={start} onChange={e => setStart}/></td>
+                <td><select name="final" id={stage} value={start} onChange={e => setStart}>
+                    <option value="">Select</option>
+                    <option value="start">start</option>
+                    <option value="end">end</option>
+                    <option value="qa">qa</option>
+                    <option value="rework">rework</option>
+                </select></td>
+            </tr>
+        )
+    }
+
+    return <div className="stage-container">
+            <h3>Set stage conditions:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>QA</th>
+                        <th>Rework</th>
+                        <th>Final Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {html}
+                </tbody>
+            </table>
+        </div>
+}
+
 export default function Process({BASE_URL}) {
     const [currentProcesses, setCurrentProcesses] = useState([])
     const [processName, setProcessName] = useState('')
